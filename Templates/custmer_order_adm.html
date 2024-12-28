@@ -1,0 +1,176 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Orders</title>
+    <link rel="stylesheet" href="{% static 'extt/css/category.css' %}">
+    <style>
+        .order-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .order-card {
+            display: flex;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .order-card img {
+            width: 250px;
+            height: auto;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+
+        .order-details {
+            flex: 1;
+        }
+
+        .order-detail {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .order-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .order-button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .order-button:hover {
+            background-color: #0056b3;
+        }
+
+        .track-order-button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            width: fit-content;
+        }
+
+        .track-order-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="order-container">
+            <a href="{% url 'admin_home' %}">Back</a>
+        <h1>Orders List</h1>
+        {% for order in orders %}
+            <div class="order-card">
+                {% if order.product.photo %}
+                    <img src="{{ order.product.photo.url }}" alt="{{ order.product.product_name }}">
+                {% else %}
+                    <img src="{% static 'path/to/default/image.jpg' %}" alt="No image available">
+                {% endif %}
+                <div class="order-details">
+                    <p class="order-detail"><span class="order-label">Name:</span> {{ order.chekout_reg.user.first_name }}</p>
+                    <p class="order-detail"><span class="order-label">Last Name:</span> {{ order.chekout_reg.user.last_name }}</p>
+                    <p class="order-detail"><span class="order-label">Email:</span> {{ order.chekout_reg.user.email }}</p>
+                    <p class="order-detail"><span class="order-label">Product:</span> {{ order.product.product_name }}</p>
+                    <p class="order-detail"><span class="order-label">Quantity:</span> {{ order.quantity }}</p>
+                    <p class="order-detail"><span class="order-label">Price:</span> ₹{{ order.price }}</p>
+                    <p class="order-detail"><span class="order-label">Added Date:</span> {{ order.added_date }}</p>
+
+                    {% if not order.is_approved %}
+                        <form method="POST" action="{% url 'approve_order' order.id %}" class="order-form">
+                            {% csrf_token %}
+                            <button type="submit" class="order-button">Accept</button>
+                        </form>
+                    {% else %}
+                        <p class="order-detail" style="color: red; font-weight: bold;">Accepted</p>
+                    {% endif %}
+
+                    {% if order.is_approved and not order.is_preparing %}
+                        <form method="POST" action="{% url 'prepare_order' order.id %}" class="order-form">
+                            {% csrf_token %}
+                            <button type="submit" class="order-button">Start Preparing</button>
+                        </form>
+                    {% elif order.is_preparing %}
+                        <p class="order-detail" style="color: orange; font-weight: bold;">Order Preparing</p>
+                    {% elif order.is_prepared %}
+                        <p class="order-detail" style="color: blue;">Prepared</p>
+                        <form method="POST" action="{% url 'deliver_order' order.id %}" class="order-form">
+                            {% csrf_token %}
+                            <button type="submit" class="order-button">Prepared</button>
+                        </form>
+                    {% endif %}
+
+                    {% if order.is_prepared and not order.is_delivery_partner_arrived %}
+                        <form method="POST" action="{% url 'delivery_partner_arrived' order.id %}" class="order-form">
+                            {% csrf_token %}
+                            <button type="submit" class="order-button">Delivery Partner Arrived</button>
+                        </form>
+                    {% elif order.is_delivery_partner_arrived %}
+                        {% if not order.delivery_boy %}
+                            <button
+                                type="button"
+                                class="order-button"
+                                onclick="window.location.href='{% url 'assign_delivary_boy' order.id %}'">
+                                Assign to Delivery Boy
+                            </button>
+                        {% else %}
+                            <p class="order-detail" style="color: green; font-weight: bold;">
+                                Assigned to {{ order.delivery_boy.user.first_name }} {{ order.delivery_boy.user.last_name }}
+                            </p>
+                        {% endif %}
+                    {% endif %}
+
+                    <button
+                        type="button"
+                        class="track-order-button"
+                        onclick="window.location.href='{% url 'track_order_adm' order.id %}'">
+                        Track Order
+                    </button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+
+
+    <script>
+        // Save scroll position on form submission
+        document.querySelectorAll('.order-form').forEach(form => {
+            form.addEventListener('submit', () => {
+                localStorage.setItem('scrollPosition', window.scrollY);
+            });
+        });
+
+        // Restore scroll position on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const scrollPosition = localStorage.getItem('scrollPosition');
+            if (scrollPosition) {
+                window.scrollTo(0, parseInt(scrollPosition, 10));
+                localStorage.removeItem('scrollPosition'); // Clear after restoring for next load
+            }
+        });
+    </script>
+</body>
+</html>

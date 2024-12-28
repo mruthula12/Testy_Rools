@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product</title>
+    <style>
+        /* Start Global Style */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #e9ebee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            height: 100%;
+        }
+
+        .login {
+            width: 50%;
+            background-color: #fafafa;
+            height: 100%;
+            border-radius: 10px 0 0 10px;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        .login h1 {
+            margin-bottom: 40px;
+            font-size: 2.5em;
+        }
+
+        input[type="submit"],
+        input[type="reset"] {
+            background-color: transparent;
+            border: 1px solid #FFF;
+            border-radius: 20px;
+            padding: 10px 20px;
+            color: #fff;
+            font-size: 20px;
+            text-transform: uppercase;
+            transition: 0.2s all ease-in-out;
+        }
+
+        input[type="submit"]:hover,
+        input[type="reset"]:hover {
+            color: #9526a9;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="text"],
+        input[type="number"] {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 30px;
+            border: none;
+            background-color: #eeeeef;
+        }
+
+        .login button {
+            width: 100%;
+            margin: 30px 0;
+            padding: 10px;
+            border: none;
+            background-color: red;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.3s all ease-in-out;
+        }
+
+        .login button:hover {
+            width: 97%;
+            font-size: 22px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="login">
+        <h1>Edit Product</h1>
+
+        <div style="color:blue;" align="center">
+            {% if messages %}
+                {% for msg in messages %}
+                    {{ msg }}<br>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <form method="post" action="{% url 'edit_product_adm' product.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" size="25" name="product_name" value="{{ product.product_name }}" required ><br><br>
+            <input type="number" step="0.01" size="25" name="product_price" value="{{ product.product_price }}" required><br><br>
+
+            <label for="photo"><b>Photo</b></label>
+            <input type="file" size="10" name="photo"><br><br>  <!-- Changed required to optional -->
+
+            {% if product.photo %}
+                <img src="{{ product.photo.url }}" alt="Current Image" style="width: 160px; height: 130px;"><br><br>
+            {% endif %}
+
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

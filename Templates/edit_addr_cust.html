@@ -1,0 +1,238 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit address</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'sta/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'sta/css/tailwind.css' %}">
+    <link rel="stylesheet" href="{% static 'sta/css/tooplate-antique-cafe.css' %}">
+
+<style>
+         /* Billing Address Form Styles */
+        .billing-form-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .billing-form {
+            display: inline-block;
+            text-align: left;
+            max-width: 500px;
+            width: 100%;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .billing-form input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .billing-form label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+                #tot_amt {
+            width: 50%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            #tot_amt:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+                  #tot_amt1 {
+            width: 50%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #tot_amt1:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+                .billing-form-container {
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .billing-form {
+            display: block;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto; /* Adds spacing between forms */
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .billing-form h2,
+        .billing-form h3 {
+            margin-bottom: 20px;
+        }
+
+        .billing-form input[type="text"],
+        .billing-form input[type="number"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .billing-form button {
+            width: 50%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .billing-form button:hover {
+            background-color: #218838;
+        }
+</style>
+
+</head>
+<body>
+    <!-- Intro -->
+    <div id="intro" class="parallax-window" data-parallax="scroll" data-image-src="{% static 'sta/img/antique-cafe-bg-01.jpg' %}">
+        <nav id="tm-nav" class="fixed w-full">
+            <div class="tm-container mx-auto px-2 md:py-6 text-right">
+                <button class="md:hidden py-2 px-2" id="menu-toggle"><i class="fas fa-2x fa-bars tm-text-gold"></i></button>
+                <ul class="mb-3 md:mb-0 text-2xl font-normal flex justify-end flex-col md:flex-row">
+                    <li class="inline-block mb-4 mx-4"><a href="{% url 'customer_home' %}" class="tm-text-gold py-1 md:py-3 px-4">Home</a></li>
+                    <li class="inline-block mb-4 mx-4"><a href="#menu" class="tm-text-gold py-1 md:py-3 px-4">Menu</a></li>
+                    <button class="inline-block mb-4 mx-4  tm-text-gold " onclick="location.href='{% url 'custmer_cart' %}'">Cart</button>
+                    <button class="inline-block mb-4 mx-4  tm-text-gold " onclick="location.href='{% url 'orders_customer' %}'">Orders</button>
+                    <button class="inline-block mb-4 mx-4  tm-text-gold"  onclick="location.href='{% url 'purchase_history_customer' %}'">Purchase History</button>
+                    <button class="inline-block mb-4 mx-4 tm-text-gold"
+                            onclick="if(confirm('Are you sure you want to log out?')) { location.href='{% url 'logout' %}'; }">
+                        Logout
+                   </button>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+
+
+    <form method="post" id="form3" action="{% url 'edit_addr_cust' cvc.id %}" class="billing-form">
+        {% csrf_token %}
+
+        <div id="newAddressForm">
+            <h2>Edit Address</h2><br><br>
+
+            <label for="houseNumber">House Number/Flat/Block No:</label>
+            <input type="text" id="houseNumber" name="house_number" value="{{cvc.house_number}}" required>
+
+            <label for="apartment">Apartment/Road/Area:</label>
+            <input type="text" id="apartment" name="apartment" value="{{cvc.apartment}}" required>
+
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" value="{{cvc.city}}" required>
+
+            <label for="postalCode">Postal Code:</label>
+            <input type="text" id="postalCode" name="postal_code" value="{{cvc.postal_code}}" required>
+
+            <label for="state">State:</label>
+            <input type="text" id="state" name="state" value="{{cvc.state}}" required>
+
+            <input type="hidden" id="latitude1" name="latitude1" readonly>
+            <input type="hidden" id="longitude1" name="longitude1" readonly>
+        </div>
+
+        <button type="submit" form="form3" class="checkout-btn">Save</button><br>
+    </form>
+
+
+
+<script src="{% static 'sta/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'sta/js/parallax.min.js' %}"></script>
+<script src="{% static 'sta/js/jquery.singlePageNav.min.js' %}"></script>
+
+
+<script>
+    document.getElementById('form3').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        // Get address components
+        const city = document.getElementById('city').value;
+        const postalCode = document.getElementById('postalCode').value;
+        const state = document.getElementById('state').value;
+
+        // Construct the full address
+        const address = `${city} ${postalCode} ${state}`;
+
+        // Encode the address to safely include in URL
+        const encodedAddress = encodeURIComponent(address);
+
+        // Geocoding request to Nominatim API
+        const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}&limit=1`;
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    const lat = data[0].lat;
+                    const lon = data[0].lon;
+
+                    // Display the latitude and longitude
+                    document.getElementById('latitude1').value = lat;
+                    document.getElementById('longitude1').value = lon;
+
+                    // Submit the form
+                    document.getElementById('form3').submit();
+                }
+                else {
+                    document.getElementById('latitude1').value = "Latitude not found.";
+                    document.getElementById('longitude1').value = "Longitude not found.";
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching geolocation data:", err);
+                document.getElementById('latitude1').value = "There was an error fetching the geolocation.";
+                document.getElementById('longitude1').value = "There was an error fetching the geolocation.";
+            });
+    });
+</script>
+
+
+<script>
+    {% if messages %}
+        {% for msg in messages %}
+          alert("{{ msg }}");
+        {% endfor %}
+    {% endif %}
+</script>
+
+</body>
+</html>

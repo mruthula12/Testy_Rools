@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Supplier</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow: hidden;
+            margin-top: 20px; /* Adds margin to push content down */
+        }
+
+        h1 {
+            font-size: 1.8em;
+            color: brown;
+             text-align: center;
+        }
+
+        .info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .info-section p {
+            font-size: 1em;
+            margin-bottom: 5px;
+        }
+
+        .info-section strong {
+            font-weight: bold;
+        }
+
+        .no-info {
+            color: #999;
+            font-style: italic;
+        }
+
+        .gif-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .gif-container img {
+            width: 190px;
+            height: auto;
+        }
+
+        .supplier-location {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .supplier-location strong {
+            font-size: 1.1em;
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 100%;
+                padding: 10px;
+            }
+
+            .gif-container img {
+                width: 200px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Track Supplier Order</h1>
+
+        <!-- Product and Address Details -->
+        <div class="info-section">
+            <p><strong>Product Name:</strong> {{ product_name }}</p>
+            <p><strong>Quantity:</strong> {{ quantity }}</p>
+            <p><strong>Total Price:</strong> ₹{{ total_price }}</p><br>
+
+            <p><strong>Address:</strong></p>
+            {% if saved_address %}
+                <p><strong>House Number: </strong>{{ saved_address.house_number }}</p>
+                <p><strong>Apartment: </strong>{{ saved_address.apartment }}</p>
+                <p><strong>City:</strong> {{ saved_address.city }}</p>
+                <p><strong>Postal Code:</strong> {{ saved_address.postal_code }}</p>
+                <p><strong>State:</strong> {{ saved_address.state }}</p>
+            {% else %}
+                <p class="no-info">No address provided.</p>
+            {% endif %}
+
+            {% if current_address %}
+                <p><strong>Current Address:</strong> {{ current_address }}</p>
+            {% else %}
+                <p class="no-info">No current address provided.</p>
+            {% endif %}
+
+        </div>
+
+        <!-- Delivery Boy GIF -->
+        <div class="gif-container">
+            {% if delivery_boy %}
+                <img src="{% static 'sta/img/delivaryboy.gif' %}" alt="Delivery Boy">
+            {% else %}
+                <p class="no-info">No delivery boy assigned yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Supplier Location Details -->
+        <div class="supplier-location">
+            <p><strong>Supplier Location:</strong></p>
+            {% if supplier_address %}
+                <p>{{ supplier_address }}</p>
+            {% else %}
+                <p class="no-info">No supplier assigned or no supplier location available for this item.</p>
+            {% endif %}
+        </div>
+
+        <p><strong>Live Distance:</strong>
+            {% if distance %}
+       <p>{{ distance|floatformat:1 }} km</p>
+        {% else %}
+        <p>Unable to calculate the distance (missing location data).</p>
+        {% endif %}
+        </p>
+    </div>
+
+    <script>
+  // Function to simulate the live distance update (this could be replaced with a real-time API call)
+  function updateDistance() {
+    // Example: fetch the updated distance from an API or backend (can be implemented using AJAX)
+    var distance = "{{ distance|floatformat:2 }}";  // Get initial distance from Django context
+    document.getElementById("distance").innerText = distance + " km";  // Update the live distance text
+  }
+
+  // Call the updateDistance function to set the initial distance when the page loads
+  window.onload = function() {
+    updateDistance();
+  }
+</script>
+
+    <script>
+       function fetchLiveDistance(orderId) {
+    fetch(`/api/live-distance/${orderId}/`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.distance) {
+                document.getElementById('distance').innerText = `${data.distance.toFixed(2)} km`;
+            } else {
+                document.getElementById('distance').innerText = data.error || 'Error fetching distance.';
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+    </script>
+
+</body>
+</html>

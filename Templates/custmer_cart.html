@@ -1,0 +1,678 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Cart</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="{% static 'extt/css/category.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #131010;
+        }
+
+        .header {
+            background-color: #2c2c2c;
+            color: white;
+            padding: 20px;
+        }
+
+        .header-container {
+            display: flex;                   /* Use flexbox for alignment */
+            align-items: center;            /* Vertically center items */
+        }
+
+        .header h1 {
+            margin: 0;                      /* Remove default margin */
+            font-size: 100px;
+            flex: 1;                        /* Allow the heading to grow and occupy space */
+            text-align: center;             /* Center the text inside the h1 */
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        .category {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .category img {
+            max-width: 100%;
+            border-radius: 8px;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .quantity-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-buttons form {
+            display: inline-block;
+        }
+
+        .button {
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+        .button1 {
+            background-color: #10e7f4;
+            color: black;
+            border: 2px solid #10e7f4;
+        }
+
+        .button1:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .checkout-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .checkout-btn:hover {
+            background-color: #45a049;
+        }
+
+        h2, h3 {
+            margin: 10px 0;
+
+        }
+
+        .total {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 24px;
+        }
+
+        #d1 {
+            text-align: center;
+
+        }
+
+        .nav-links {
+            list-style: none;               /* Remove bullet points */
+            display: flex;                  /* Use flex to align links */
+            gap: 20px;                      /* Space between the links */
+        }
+
+        .nav-links li {
+            display: flex;
+            margin: 0 20px;
+            margin-top: 5px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: red; /* Change color on hover */
+        }
+     /* Location button */
+        .location-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .location-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .location-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Hide the location input by default */
+        #locationForm {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #locationInput {
+            padding: 10px;
+            font-size: 16px;
+            width: 60%;
+            margin-top: 10px;
+        }
+
+
+        /* Billing Address Form Styles */
+        .billing-form-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .billing-form {
+            display: inline-block;
+            text-align: left;
+            max-width: 500px;
+            width: 100%;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .billing-form input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .billing-form label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        #tot_amt {
+    width: 50%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+    #tot_amt:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+          #tot_amt1 {
+    width: 50%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#tot_amt1:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+        .billing-form-container {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.billing-form {
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto; /* Adds spacing between forms */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.billing-form h2,
+.billing-form h3 {
+    margin-bottom: 20px;
+}
+
+.billing-form input[type="text"],
+.billing-form input[type="number"] {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.billing-form button {
+    width: 50%;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.billing-form button:hover {
+    background-color: #218838;
+}
+
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-container">
+        <h1>Tasty Roots</h1>
+        <ul class="nav-links">
+            <li><a href="{% url 'customer_home' %}">Home</a></li>
+        </ul>
+    </div>
+</header>
+
+<br><br>
+
+<h2 id="d1">Cart</h2>
+
+<section class="categories">
+    {% if cart_items %}
+        {% for item in cart_items %}
+            <div class="category" id="item-{{ item.id }}">
+                <img
+                    src="{% if item.product.photo %}{{ item.product.photo.url }}{% else %}{% static 'sta/img/default-image.jpg' %}{% endif %}"
+                    alt="{{ item.product }}">
+                <h2>{{ item.product }}</h2>
+                <h3 id="price-per-{{ item.id }}">Price per item: ₹{{ item.product.product_price }}</h3>
+                <h3>Total Price: ₹<span id="item-total-{{ item.id }}">{{ item.total_price }}</span></h3>
+
+                <div class="quantity-buttons">
+                    <button type="button" onclick="updateCartQuantity({{ item.id }}, 'decr');" class="button button1">-</button>
+                    <span id="quantity-{{ item.id }}">{{ item.quantity }}</span>
+                    <button type="button" onclick="updateCartQuantity({{ item.id }}, 'incr');" class="button button1">+</button>
+                </div>
+
+                <a href="{% url 'remove_from_cart' item.id %}"
+                   class="button button1"
+                   onclick="return confirm('Are you sure you want to remove this item?');">
+                   Remove
+                </a>
+            </div>
+        {% endfor %}
+
+        <div class="total">
+            <h2>Total: ₹<span id="total-price">{{ tot_price }}</span></h2>
+        </div>
+</section>
+
+<div id="selectBillingSection" class="billing-form-container">
+    <h2>Select Billing Address</h2>
+
+    <!-- First Form: Saved Address and Current Location -->
+    <form method="post" id="form1" action="{% url 'checkout' %}" class="billing-form">
+        {% csrf_token %}
+        <!-- Saved Address Section -->
+        {% if saved_addresses %}
+        <div id="savedAddressSection">
+            <h3>Saved Addresses</h3>
+            {% for address in saved_addresses %}
+            <div>
+                <label>
+                    <input type="radio" name="location_type" value="{{ address.id }}" id="radio_adr"
+                           onclick="selectSavedAddress({{ address.id }})">
+                    {{ address.house_number }}, {{ address.apartment }}, {{ address.city }},
+                    {{ address.state }} - {{ address.postal_code }}
+                </label><br>
+                <button type="button"
+                        onclick="if(confirm('Are you sure you want to delete this address?')) { location.href='{% url 'del_addr_cust' address.id %}'; }">
+                    Delete Address
+                </button>
+                <br><br>
+                <button type="button" onclick="window.location.href='{% url 'edit_addr_cust' address.id %}';">Edit Address</button><br><br>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Current Location Section -->
+        <div id="currentLocationSection">
+            <label>
+                <input type="radio" name="location_type" value="current_location"
+                       id="currentLocationRadio" onclick="getLocation()">
+                Use Current Location
+            </label>
+            <input type="hidden" name="latitude" id="latitudeInput">
+            <input type="hidden" name="longitude" id="longitudeInput">
+        </div>
+
+        <!-- Total Amount -->
+        <input type="number" step="0.01" id="tot_amt1" name="tot_amt1"
+               placeholder="Enter total amount Rs {{ total_price }}" required>
+        <span id="error-message1" style="color: red; display: none;"></span>
+
+        <!-- Submit Button -->
+        <button type="submit" class="checkout-btn">Checkout</button>
+    </form>
+
+    <!-- Second Form: New Billing Address -->
+    <form method="post" id="form3" action="{% url 'checkout_new_adr' %}" class="billing-form">
+        {% csrf_token %}
+
+        <div id="newAddressForm">
+            <h2>Checkout with New Address</h2>
+
+            <label for="houseNumber">House Number/Flat/Block No:</label>
+            <input type="text" id="houseNumber" name="house_number" placeholder="House No/Flat/Block No" required>
+
+            <label for="apartment">Apartment/Road/Area:</label>
+            <input type="text" id="apartment" name="apartment" placeholder="Apartment or Road or Area" required>
+
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" placeholder="City" required>
+
+            <label for="postalCode">Postal Code:</label>
+            <input type="text" id="postalCode" name="postal_code" placeholder="Postal Code" required>
+
+            <label for="state">State:</label>
+            <input type="text" id="state" name="state" placeholder="State" required>
+
+            <label for="totalAmount">Total Amount:</label>
+            <input type="number" step="0.01" id="tot_amt" name="tot_amt"
+                   placeholder="Enter total amount Rs {{ total_price }}" required>
+            <span id="error-message" style="color: red; display: none;"></span>
+
+            <input type="hidden" id="latitude1" name="latitude1" readonly required>
+            <input type="hidden" id="longitude1" name="longitude1" readonly required>
+        </div>
+
+        <!-- Submit Button -->
+        <button form="form3" type="submit" class="checkout-btn">Checkout</button>
+    </form>
+</div>
+
+
+{% else %}
+    <p style="text-align: center;">Your cart is empty.</p>
+{% endif %}
+
+<script>
+    // Handle selection of a saved address
+    function selectSavedAddress(addressId) {
+        document.getElementById('selectedAddressInput').value = addressId;
+        document.getElementById('latitudeInput').value = '';
+        document.getElementById('longitudeInput').value = '';
+        document.getElementById('currentLocationRadio').checked = false;
+    }
+
+    // Handle current location selection
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                document.getElementById('latitudeInput').value = latitude;
+                document.getElementById('longitudeInput').value = longitude;
+                document.getElementById('selectedAddressInput').value = '';
+                document.getElementById('currentLocationRadio').checked = true;
+            }, (error) => {
+                alert("Unable to fetch your location. Please try again.");
+            });
+        } else {
+            alert("Geolocation is not supported by your browser.");
+        }
+    }
+
+    // Toggle visibility of address sections based on selected option
+function toggleVisibility() {
+    const savedAddressRadios = document.querySelectorAll('input[name="location_type"][id="radio_adr"]');
+    const currentLocationRadio = document.querySelector('input[name="location_type"][id="currentLocationRadio"]');
+    const newAddressFormInputs = document.querySelectorAll('#newAddressForm input');
+
+    const savedAddressSection = document.getElementById('savedAddressSection');
+    const currentLocationSection = document.getElementById('currentLocationSection');
+    const newAddressForm = document.getElementById('form3');
+    const selectBillingSection = document.getElementById('selectBillingSection'); // Main "Select Billing Address" section
+    const billingHeading = document.querySelector('#selectBillingSection h2'); // "Select Billing Address" heading
+    const totalAmountInput = document.querySelector('#form1'); // Total amount input in "Select Billing Address"
+
+    let selectedOption = null;
+
+    // Determine which option is selected
+    savedAddressRadios.forEach((radio) => {
+        if (radio.checked) selectedOption = 'saved_address';
+    });
+
+    if (currentLocationRadio && currentLocationRadio.checked) {
+        selectedOption = 'current_location';
+    }
+
+    newAddressFormInputs.forEach((input) => {
+        if (document.activeElement === input) selectedOption = 'new_address';
+    });
+
+    // Toggle visibility based on the selected option
+    if (selectedOption === 'saved_address') {
+        savedAddressSection.style.display = 'block';
+        currentLocationSection.style.display = 'none';
+        newAddressForm.style.display = 'none';
+        selectBillingSection.style.display = 'block'; // Ensure main section is visible
+        if (billingHeading) billingHeading.style.display = 'block'; // Show the heading
+        if (totalAmountInput) totalAmountInput.style.display = 'block'; // Show total amount input
+    } else if (selectedOption === 'current_location') {
+        savedAddressSection.style.display = 'none';
+        currentLocationSection.style.display = 'block';
+        newAddressForm.style.display = 'none';
+        selectBillingSection.style.display = 'block'; // Ensure main section is visible
+        if (billingHeading) billingHeading.style.display = 'none'; // Show the heading
+        if (totalAmountInput) totalAmountInput.style.display = 'block'; // Show total amount input
+    } else if (selectedOption === 'new_address') {
+        savedAddressSection.style.display = 'none';
+        currentLocationSection.style.display = 'none';
+        newAddressForm.style.display = 'block';
+        if (billingHeading) billingHeading.style.display = 'none'; // Hide the heading
+        if (totalAmountInput) totalAmountInput.style.display = 'none'; // Hide total amount input
+    } else {
+        // Default state: Show all sections
+        savedAddressSection.style.display = 'block';
+        currentLocationSection.style.display = 'block';
+        newAddressForm.style.display = 'block';
+        selectBillingSection.style.display = 'block'; // Ensure main section is visible
+        if (billingHeading) billingHeading.style.display = 'block'; // Show the heading
+        if (totalAmountInput) totalAmountInput.style.display = 'block'; // Show total amount input
+    }
+}
+
+// Event listeners for radio buttons and input fields
+document.querySelectorAll('input[name="location_type"]').forEach((radio) => {
+    radio.addEventListener('change', toggleVisibility);
+});
+
+document.querySelectorAll('#newAddressForm input').forEach((input) => {
+    input.addEventListener('focus', toggleVisibility);
+});
+
+// Call the function on page load to set the initial visibility
+window.onload = toggleVisibility;
+</script>
+
+<script>
+    function updateCartQuantity(itemId, action) {
+        $.ajax({
+            url: action === 'incr' ? '{% url "update_cart_incr_ajax" %}' : '{% url "update_cart_decr_ajax" %}',
+            type: 'POST',
+            data: {
+                'item_id': itemId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                $('#quantity-' + itemId).text(response.new_quantity);
+                $('#item-total-' + itemId).text((response.new_quantity * response.cart_items.find(item => item.id === itemId).product_price).toFixed(2));
+                $('#total-price').text(response.tot_price);
+
+                response.cart_items.forEach(item => {
+                    $('#quantity-' + item.id).text(item.quantity);
+                    $('#price-per-' + item.id).text('Price per item: ₹' + item.product_price);
+                });
+
+                response.cart_items.forEach(item => {
+                    if (item.quantity === 0) {
+                        $('#item-' + item.id).remove();
+                    }
+                });
+            },
+            error: function() {
+                alert('Failed to update cart quantity. Please try again.');
+            }
+        });
+    }
+</script>
+
+
+
+<script>
+    document.getElementById('form3').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        // Get address components
+        const city = document.getElementById('city').value;
+        const postalCode = document.getElementById('postalCode').value;
+        const state = document.getElementById('state').value;
+
+        // Construct the full address
+        const address = `${city} ${postalCode} ${state}`;
+
+        // Encode the address to safely include in URL
+        const encodedAddress = encodeURIComponent(address);
+
+        // Geocoding request to Nominatim API
+        const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}&limit=1`;
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    const lat = data[0].lat;
+                    const lon = data[0].lon;
+
+                    // Display the latitude and longitude
+                    document.getElementById('latitude1').value = lat;
+                    document.getElementById('longitude1').value = lon;
+
+                    // Submit the form
+                    document.getElementById('form3').submit();
+                }
+                else {
+                    document.getElementById('latitude1').value = "Latitude not found.";
+                    document.getElementById('longitude1').value = "Longitude not found.";
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching geolocation data:", err);
+                document.getElementById('latitude1').value = "There was an error fetching the geolocation.";
+                document.getElementById('longitude1').value = "There was an error fetching the geolocation.";
+            });
+    });
+</script>
+
+
+<script>
+    document.getElementById('tot_amt').addEventListener('input', function() {
+        var enteredAmount = this.value;
+        var totalPrice = {{ tot_price }};  // Pass the total price from the backend into JavaScript
+
+        // Send AJAX request if the entered amount is valid
+        if (enteredAmount) {
+            fetch("{% url 'check_total_amount' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({ 'entered_amount': enteredAmount, 'total_price': totalPrice })
+            })
+            .then(response => response.json())
+            .then(data => {
+                var errorMessage = document.getElementById('error-message');
+                if (data.is_correct) {
+                    errorMessage.style.display = 'none';
+                } else {
+                    errorMessage.textContent = "Entered amount is incorrect!";
+                    errorMessage.style.display = 'inline';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    });
+</script>
+
+
+<script>
+    document.getElementById('tot_amt1').addEventListener('input', function() {
+        var enteredAmount = this.value;
+        var totalPrice = {{ tot_price }};  // Pass the total price from the backend into JavaScript
+
+        // Send AJAX request if the entered amount is valid
+        if (enteredAmount) {
+            fetch("{% url 'check_total_amount' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({ 'entered_amount': enteredAmount, 'total_price': totalPrice })
+            })
+            .then(response => response.json())
+            .then(data => {
+                var errorMessage1 = document.getElementById('error-message1');
+                if (data.is_correct) {
+                    errorMessage1.style.display = 'none';
+                } else {
+                    errorMessage1.textContent = "Entered amount is incorrect!";
+                    errorMessage1.style.display = 'inline';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    });
+</script>
+
+
+<script>
+    {% if messages %}
+        {% for msg in messages %}
+          alert("{{ msg }}");
+        {% endfor %}
+    {% endif %}
+</script>
+
+
+</body>
+
+</html>

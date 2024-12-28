@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live orders</title>
+    <link rel="stylesheet" href="{% static 'sta/css/tooplate-antique-cafe.css' %}">
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+        }
+        .purchase-list {
+            background-color: #f9fafb;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .purchase-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding: 16px 0;
+        }
+        .purchase-item img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+        .p {
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl text-center mb-6" align="center">Live Orders</h1>
+
+        {% if checkouts %}
+            <div class="purchase-list">
+                <ul>
+                    {% for checkout in checkouts %}
+                        {% if not checkout.is_delivered_status %}  <!-- Exclude delivered orders -->
+                        <li class="purchase-item">
+                            <img src="{{ checkout.product.photo.url }}" alt="{{ checkout.product }}">
+                            <div>
+                                <p class="p">Product: {{ checkout.product }}</p>
+                                <p class="p">Quantity: {{ checkout.quantity }}</p>
+                                <p class="p">Price per Item: ₹{{ checkout.price }}</p><br>
+                                <p class="p">Total Price: ₹{{ checkout.total_price }}</p>
+
+                                {% if checkout.is_approved %}
+                                    {% if checkout.is_preparing %}
+                                        {% if checkout.is_delivery_partner_arrived %}
+                                            <p class="order-detail" style="color: red; font-weight: bold;">Order Picked Up</p>
+                                        {% else %}
+                                            <p class="order-detail" style="color: orange; font-weight: bold;">Order Preparing</p>
+                                        {% endif %}
+                                    {% else %}
+                                        <p class="order-detail" style="color: green; font-weight: bold;">Order Approved</p>
+                                    {% endif %}
+                                {% else %}
+                                    <p class="order-detail" style="color: red; font-weight: bold;">Order Pending</p>
+                                {% endif %}
+
+                                <!-- New logic based on the supplier's actions -->
+                                {% if checkout.is_out_of_delivery %}
+                                    <p class="order-detail" style="color: blue; font-weight: bold;">Out for Delivery</p>
+                                {% elif checkout.is_delivered_status %}
+                                    <p class="order-detail" style="color: green; font-weight: bold;">Delivered Successfully</p>
+                                {% endif %}
+                                <a href="{% url 'track_supplier' checkout.id %}" class="btn">Track Supplier</a>
+                            </div>
+                        </li>
+                        {% endif %} <!-- End of exclusion logic -->
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <p class="text-center text-lg">You have no Orders</p>
+        {% endif %}
+    </div>
+
+    <footer class="tm-container mx-auto px-2 py-4 text-center">
+
+        <p>&copy; 2024 Tasty Roots. All Rights Reserved.</p>
+    </footer>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

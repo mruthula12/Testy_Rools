@@ -1,0 +1,218 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'sta/css/all.min.css' %}"> <!-- fontawesome -->
+    <!-- <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="{% static 'sta/css/tailwind.css' %}">
+    <link rel="stylesheet" href="{% static 'sta/css/tooplate-antique-cafe.css' %}">
+
+<!--
+
+Tooplate 2126 Antique Cafe
+
+https://www.tooplate.com/view/2126-antique-cafe
+
+-->
+</head>
+<body>
+    <!-- Intro -->
+    <div id="intro" class="parallax-window" data-parallax="scroll" data-image-src="{% static 'sta/img/antique-cafe-bg-01.jpg' %}">
+
+        <nav id="tm-nav" class="fixed w-full">
+            <div class="tm-container mx-auto px-2 md:py-6 text-right">
+                <button class="md:hidden py-2 px-2" id="menu-toggle"><i class="fas fa-2x fa-bars tm-text-gold"></i></button>
+                <ul class="mb-3 md:mb-0 text-2xl font-normal flex justify-end flex-col md:flex-row">
+
+                    <li class="inline-block mb-4 mx-4">
+                        <a href="{% url 'admin_home' %}" class="tm-text-gold py-1 md:py-3 px-4">Home</a>
+                    </li>
+                   <button class="inline-block mb-4 mx-4 tm-text-gold" onclick="location.href='#mennu'">Menu</button>
+                   <button class="inline-block mb-4 mx-4 tm-text-gold" onclick="location.href='{% url 'custmer_order_adm' %}'">Orders</button>
+                   <button class="inline-block mb-4 mx-4 tm-text-gold" onclick="location.href='{% url 'supplier_detail' %}'">Supplier Status</button>
+                   <button class="inline-block mb-4 mx-4 tm-text-gold"
+                            onclick="if(confirm('Are you sure you want to log out?')) { location.href='{% url 'logout' %}'; }">
+                        Logout
+                   </button>
+
+                </ul>
+            </div>
+        </nav>
+
+
+        <div class="container mx-auto px-2 tm-intro-width">
+            <div class="sm:pb-60 sm:pt-48 py-20">
+                <div class="bg-black bg-opacity-70 p-12 mb-5 text-center">
+                    <h1 class="text-white text-5xl tm-logo-font mb-5">Tasty Roots</h1>
+                    <p class="tm-text-gold tm-text-2xl">"Savor every bite"</p>
+                </div>
+                <div class="bg-black bg-opacity-70 p-10 mb-5">
+                    <p class="text-white leading-8 text-sm font-light">
+                      At Tasty Roots, we take pride in offering a diverse menu that blends the finest traditional and international flavors. Whether you’re in the mood for comforting traditional flavors or exploring international tastes, we bring it all to your doorstep. Our focus is on quality, convenience, and ensuring every meal is prepared with care, so you can enjoy the best of both worlds, delivered quickly and fresh. With our fast and reliable online delivery service, you can enjoy a satisfying meal in the comfort of your home, anytime you like. <a rel="nofollow" href="https://www.tooplate.com/contact" target="_parent">send us a message</a>. </p>
+                </div>
+                <div class="text-center">
+                    <div class="inline-block">
+                        <a href="#menu" class="flex justify-center items-center bg-black bg-opacity-70 py-6 px-8 rounded-lg font-semibold tm-text-2xl tm-text-gold hover:text-gray-200 transition">
+                            <i class="fas fa-coffee mr-3"></i>
+                            <span>Let's explore...</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+   <!-- Cafe Menu -->
+<div id="menu" class="parallax-window" data-parallax="scroll" data-image-src="{% static 'sta/img/antique-cafe-bg-02.jpg' %}">
+    <div class="container mx-auto tm-container py-24 sm:py-48">
+        <div class="text-center mb-16">
+            <h2 class="bg-white tm-text-brown py-6 px-12 text-4xl font-medium inline-block rounded-md">Our Menu</h2>
+        </div>
+
+         <button class="inline-block tm-bg-green transition text-white text-xl pt-3 pb-4 px-8 rounded-md"
+            onclick="location.href='{% url 'add_product_adm' %}'">
+            Add new food
+        </button><br><br>
+
+        <!-- Flex container to hold left and right columns -->
+        <div class="flex flex-col lg:flex-row justify-around items-start gap-6">
+
+            <!-- Left Side Column -->
+            <div class="flex-1 m-5 rounded-xl px-4 py-6 sm:px-8 sm:py-10 tm-bg-brown tm-item-container">
+                <div class="product-list" id="mennu">
+                    {% for t in fgt %}
+                    {% if forloop.counter|divisibleby:2 %}
+                    <div class="flex items-start mb-6 tm-menu-item rounded-md border border-gray-400 shadow-lg p-4">
+                        {% if t.photo %}
+                        <img src="{{ t.photo.url }}" alt="Image" class="rounded-md" style="width: 160px; height: 130px;">
+                        {% else %}
+                        <img src="{% static 'sta/img/kfc-burger.jpg' %}" alt="Default Image" class="rounded-md" style="width: 160px; height: 130px;">
+                        {% endif %}
+                        <div class="ml-3 sm:ml-6">
+                            <h3 class="text-lg sm:text-xl mb-2 sm:mb-3 tm-text-yellow">{{t.product_name}}</h3>
+                            <div class="text-white text-md sm:text-lg font-light">&#8377; {{t.product_price}}</div>
+
+                             <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                <button class="inline-block tm-bg-green transition text-white text-xl pt-3 pb-3 px-8 rounded-md " onclick="location.href='{% url 'edit_product_adm' t.id %}'" style="font-size: 20px;">Edit <i class="fa fa-edit"></i></button>
+                               <button
+                                    class="inline-block tm-bg-green transition text-white text-xl pt-3 pb-4 px-8 rounded-md"
+                                    onclick="location.href='{% url 'delete_product_adm' t.id %}'"
+                                    style="font-size: 24px;">
+                                    Delete <i class="far fa-trash-alt"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Right Side Column -->
+            <div class="flex-1 m-5 rounded-xl px-4 py-6 sm:px-8 sm:py-10 tm-bg-brown tm-item-container">
+                <div class="product-list">
+                    {% for t in fgt %}
+                    {% if not forloop.counter|divisibleby:2 %}
+                    <div class="flex items-start mb-6 tm-menu-item rounded-md border border-gray-400 shadow-lg p-4">
+                        {% if t.photo %}
+                        <img src="{{ t.photo.url }}" alt="Image" class="rounded-md" style="width: 160px; height: 130px;">
+                        {% else %}
+                        <img src="{% static 'sta/img/kfc-burger.jpg' %}" alt="Default Image" class="rounded-md" style="width: 160px; height: 130px;">
+                        {% endif %}
+                        <div class="ml-3 sm:ml-6">
+                            <h3 class="text-lg sm:text-xl mb-2 sm:mb-3 tm-text-yellow">{{t.product_name}}</h3>
+                            <div class="text-white text-md sm:text-lg font-light">&#8377; {{t.product_price}}</div>
+
+                             <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                <button class="inline-block tm-bg-green transition text-white text-xl pt-3 pb-3 px-8 rounded-md " onclick="location.href='{% url 'edit_product_adm' t.id %}'" style="font-size: 20px;">Edit <i class="fa fa-edit"></i></button>
+                               <button
+                                    class="inline-block tm-bg-green transition text-white text-xl pt-3 pb-4 px-8 rounded-md"
+                                    onclick="location.href='{% url 'delete_product_adm' t.id %}'"
+                                    style="font-size: 24px;">
+                                    Delete <i class="far fa-trash-alt"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="{% static 'sta/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'sta/js/parallax.min.js' %}"></script>
+<script src="{% static 'sta/js/jquery.singlePageNav.min.js' %}"></script>
+<script>
+
+    function checkAndShowHideMenu() {
+        if(window.innerWidth < 768) {
+            $('#tm-nav ul').addClass('hidden');
+        } else {
+            $('#tm-nav ul').removeClass('hidden');
+        }
+    }
+
+    $(function(){
+        var tmNav = $('#tm-nav');
+        tmNav.singlePageNav();
+
+        checkAndShowHideMenu();
+        window.addEventListener('resize', checkAndShowHideMenu);
+
+        $('#menu-toggle').click(function(){
+            $('#tm-nav ul').toggleClass('hidden');
+        });
+
+        $('#tm-nav ul li').click(function(){
+            if(window.innerWidth < 768) {
+                $('#tm-nav ul').addClass('hidden');
+            }
+        });
+
+        $(document).scroll(function() {
+            var distanceFromTop = $(document).scrollTop();
+
+            if(distanceFromTop > 100) {
+                tmNav.addClass('scroll');
+            } else {
+                tmNav.removeClass('scroll');
+            }
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    });
+</script>
+
+<script>
+    {% if messages %}
+        {% for msg in messages %}
+          alert("{{ msg }}");
+        {% endfor %}
+    {% endif %}
+</script>
+
+</body>
+</html>

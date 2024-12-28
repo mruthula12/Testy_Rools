@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #0e1a35;
+        }
+
+        .login-container {
+            background: #1f2a48;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            width: 300px;
+            color: white;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            background: none;
+            border: 1px solid #4f5b7a;
+            border-radius: 5px;
+            color: white;
+            outline: none;
+        }
+
+        .input-group label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #808db1;
+            pointer-events: none;
+            transition: 0.2s ease all;
+        }
+
+        .input-group input:focus ~ label,
+        .input-group input:not(:placeholder-shown) ~ label {
+            top: -15px;
+            left: 10px;
+            font-size: 12px;
+            color: #00aaff;
+        }
+
+        .actions button {
+            width: 100%;
+            padding: 10px;
+            background: #00aaff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .actions button:hover {
+            background: #0077cc;
+        }
+
+        .links {
+            margin-top: 20px;
+        }
+
+        .links a {
+            color: #00aaff;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            margin: 5px 0;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+
+        <div style="color:blue;" align="center">
+            {% if messages %}
+                {% for msg in messages %}
+                        {{ msg }}
+                {% endfor %}
+            {% endif %}
+            </div><br><br>
+
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="text" id="userr" name="user_name" placeholder="" required>
+                <label for="userr">Username</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" name="pword" placeholder="" required>
+                <label for="password">Password</label>
+            </div>
+            <div class="actions">
+                <button type="submit">Log In</button>
+            </div>
+        </form>
+        <!--
+        <div class="links">
+           <a href="{% url 'register_admin' %}">Forgot Password?</a>
+             <a href="{% url 'register_admin' %}">Create Account</a>
+        </div>
+        -->
+</body>
+</html>

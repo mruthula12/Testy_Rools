@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="post" action="{% url 'delete_product' t.id %}" style="display: inline;">
+    {% csrf_token %}
+    <button type="submit" class="inline-block tm-bg-green transition text-white text-xl pt-3 pb-4 px-8 rounded-md" style="font-size: 24px;">
+        Delete <i class="far fa-trash-alt"></i>
+    </button>
+</form>
+
+</body>
+</html>

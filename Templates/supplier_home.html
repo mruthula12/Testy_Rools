@@ -1,0 +1,343 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'sta/css/all.min.css' %}"> <!-- fontawesome -->
+    <!-- <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="{% static 'sta/css/tailwind.css' %}">
+    <link rel="stylesheet" href="{% static 'sta/css/tooplate-antique-cafe.css' %}">
+
+<!--
+
+Tooplate 2126 Antique Cafe
+
+https://www.tooplate.com/view/2126-antique-cafe
+
+-->
+</head>
+<style>.dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 100px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content button {
+            color: black;
+            padding: 8px 16px;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .dropdown-content button:hover {
+            background-color: #ddd;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+</style>
+<body>
+    <!-- Intro -->
+    <div id="intro" class="parallax-window" data-parallax="scroll" data-image-src="{% static 'sta/img/antique-cafe-bg-01.jpg' %}">
+        <nav id="tm-nav" class="fixed w-full">
+            <div class="tm-container mx-auto px-2 md:py-6 text-right">
+                <button class="md:hidden py-2 px-2" id="menu-toggle"><i class="fas fa-2x fa-bars tm-text-gold"></i></button>
+                <ul class="mb-3 md:mb-0 text-2xl font-normal flex justify-end flex-col md:flex-row">
+                    <li class="inline-block mb-4 mx-4">
+                        <a href="{% url 'supplier_home' %}" class="tm-text-gold py-1 md:py-3 px-4">Home</a>
+                    </li>
+                    <li class="inline-block mb-4 mx-4">
+                        <a href="#menu" class="tm-text-gold py-1 md:py-3 px-4">Menu</a>
+                    </li>
+                    <li class="inline-block mb-4 mx-4">
+                        <a href="#" class="tm-text-gold py-1 md:py-3 px-4" onclick="updateLocation(event)">Update Location</a>
+                    </li>
+
+                <div class="dropdown">
+                    <button class="dropdown-button tm-text-gold" id="supplier-status-button">Supplier Status</button>
+                    <div class="dropdown-content">
+                        <button id="in-status" onclick="selectStatus('In', this)">In</button>
+                        <button id="out-status" onclick="selectStatus('Out', this)">Out</button>
+                    </div>
+                </div>
+
+                 <form method="POST" id="location-form">
+                    {% csrf_token %}
+
+                </form>
+
+
+
+        <li class="inline-block mb-4 mx-4">
+            <a href="{% url 'supplier_assigned_orders' %}" class="tm-text-gold py-1 md:py-3 px-4">Assigned Items</a>
+        </li>
+
+
+        {% if user.is_authenticated %}
+       <button class="inline-block mb-4 mx-4  tm-text-gold"  onclick="if(confirm('Are you sure you want to log out?')) { location.href='{% url 'logout' %}'; }">Logout</button>
+        {% else %}
+        <button class="inline-block mb-4 mx-4  tm-text-gold"  onclick="location.href='{% url 'login' %}'">Login</button>
+
+        {% endif %}
+
+
+        </ul>
+    </div>
+</nav>
+
+
+        <div class="container mx-auto px-2 tm-intro-width">
+            <div class="sm:pb-60 sm:pt-48 py-20">
+                <div class="bg-black bg-opacity-70 p-12 mb-5 text-center">
+
+                    <h1 class="text-white text-5xl tm-logo-font mb-5 " id="statts" style="font-size:100px">{% if cdc %} {{cdc.in_out}} {% endif %}</h1>
+
+                    <p class="tm-text-gold tm-text-2xl">SUPPLIER HOME</p>
+                </div>
+                <div class="bg-black bg-opacity-70 p-10 mb-5">
+                    <p class="text-white leading-8 text-sm font-light">
+                      At Tasty Roots, we take pride in offering a diverse menu that blends the finest traditional and international flavors. Whether you’re in the mood for comforting traditional flavors or exploring international tastes, we bring it all to your doorstep. Our focus is on quality, convenience, and ensuring every meal is prepared with care, so you can enjoy the best of both worlds, delivered quickly and fresh. With our fast and reliable online delivery service, you can enjoy a satisfying meal in the comfort of your home, anytime you like. <a rel="nofollow" href="https://www.tooplate.com/contact" target="_parent">send us a message</a>. </p>
+                </div>
+                <div class="text-center">
+                    <div class="inline-block">
+                        <a href="#menu" class="flex justify-center items-center bg-black bg-opacity-70 py-6 px-8 rounded-lg font-semibold tm-text-2xl tm-text-gold hover:text-gray-200 transition">
+                            <i class="fas fa-coffee mr-3"></i>
+                            <span>Let's explore...</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Cafe Menu -->
+<div id="menu" class="parallax-window" data-parallax="scroll" data-image-src="{% static 'sta/img/antique-cafe-bg-02.jpg' %}">
+    <div class="container mx-auto tm-container py-24 sm:py-48">
+        <div class="text-center mb-16">
+            <h2 class="bg-white tm-text-brown py-6 px-12 text-4xl font-medium inline-block rounded-md">Our Menu</h2>
+        </div>
+
+        <!-- Flex container to hold left and right columns -->
+        <div class="flex flex-col lg:flex-row justify-around items-start gap-6">
+
+            <!-- Left Side Column -->
+            <div class="flex-1 m-5 rounded-xl px-4 py-6 sm:px-8 sm:py-10 tm-bg-brown tm-item-container">
+                <div class="product-list">
+                    {% for t in fgt %}
+                    {% if forloop.counter|divisibleby:2 %}
+                    <div class="flex items-start mb-6 tm-menu-item rounded-md border border-gray-400 shadow-lg p-4">
+                        {% if t.photo %}
+                        <img src="{{ t.photo.url }}" alt="Image" class="rounded-md" style="width: 160px; height: 130px;">
+                        {% else %}
+                        <img src="{% static 'sta/img/kfc-burger.jpg' %}" alt="Default Image" class="rounded-md" style="width: 160px; height: 130px;">
+                        {% endif %}
+                        <div class="ml-3 sm:ml-6">
+                            <h3 class="text-lg sm:text-xl mb-2 sm:mb-3 tm-text-yellow">{{t.product_name}}</h3>
+                            <div class="text-white text-md sm:text-lg font-light">&#8377; {{t.product_price}}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Right Side Column -->
+            <div class="flex-1 m-5 rounded-xl px-4 py-6 sm:px-8 sm:py-10 tm-bg-brown tm-item-container">
+                <div class="product-list">
+                    {% for t in fgt %}
+                    {% if not forloop.counter|divisibleby:2 %}
+                    <div class="flex items-start mb-6 tm-menu-item rounded-md border border-gray-400 shadow-lg p-4">
+                        {% if t.photo %}
+                        <img src="{{ t.photo.url }}" alt="Image" class="rounded-md" style="width: 160px; height: 130px;">
+                        {% else %}
+                        <img src="{% static 'sta/img/kfc-burger.jpg' %}" alt="Default Image" class="rounded-md" style="width: 160px; height: 130px;">
+                        {% endif %}
+                        <div class="ml-3 sm:ml-6">
+                            <h3 class="text-lg sm:text-xl mb-2 sm:mb-3 tm-text-yellow">{{t.product_name}}</h3>
+                            <div class="text-white text-md sm:text-lg font-light">&#8377; {{t.product_price}}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script src="{% static 'sta/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'sta/js/parallax.min.js' %}"></script>
+<script src="{% static 'sta/js/jquery.singlePageNav.min.js' %}"></script>
+
+<script>
+function selectStatus(status) {
+    // Send an AJAX request to the server to update the status
+    fetch('/update-status/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken') // Get CSRF token for secure requests
+        },
+        body: JSON.stringify({ status: status }) // Send the selected status
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json(); // Parse the JSON response
+    })
+    .then(data => {
+        if (data.success) {
+            // Update the button styles and display the response status
+            updateButtonStyles(status);
+            displayStatus(data.status_data); // Call helper function to update the UI
+        } else {
+            alert(data.error || 'Error updating status'); // Show server error message
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while updating the status. Please try again.');
+    });
+}
+
+// Helper function to update button styles based on the selected status
+function updateButtonStyles(status) {
+    const inButton = document.getElementById('in-status');
+    const outButton = document.getElementById('out-status');
+
+    // Reset styles for both buttons
+    inButton.style.backgroundColor = '';
+    outButton.style.backgroundColor = '';
+
+    // Highlight the selected button
+    if (status === 'In') {
+        inButton.style.backgroundColor = '#4CAF50'; // Green for "In"
+    } else if (status === 'Out') {
+        outButton.style.backgroundColor = '#F44336'; // Red for "Out"
+    }
+}
+
+// Helper function to display the updated status in the UI
+function displayStatus(statusData) {
+    const statusElement = document.getElementById('statts'); // Assuming there's an element with id="statts"
+
+    if (statusElement) {
+        // Check if the statusData contains the expected "status" field
+        if (statusData && statusData.status) {
+            // Display the status in the element
+            statusElement.innerHTML = `
+                <p><strong>${statusData.status}</strong></p>
+            `;
+        } else {
+            console.error('Status field is missing in the response');
+        }
+    } else {
+        console.error('Status element not found!');
+    }
+}
+
+// Function to retrieve the CSRF token from cookies
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(`${name}=`)) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
+
+<script>
+    function updateLocation(event) {
+        if (event) {
+            event.preventDefault(); // Prevent the default anchor link behavior
+        }
+
+        const currentTime = new Date().toLocaleTimeString(); // Get the current time
+        console.log(`Location update triggered at: ${currentTime}`); // Log the time of the update
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                const status = 'In'; // Default status
+
+                console.log("Latitude:", latitude, "Longitude:", longitude); // Debug
+
+                const csrfToken = document.querySelector('[name="csrfmiddlewaretoken"]').value;
+
+                fetch("/update-delivery-boy-location/", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        'latitude': latitude,
+                        'longitude': longitude,
+                        'status': status
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            console.error("Server Error:", data.error);
+                        } else {
+                            console.log(`Location updated at: ${currentTime} - ${data.message}`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch Error:', error);
+                    });
+            }, function (error) {
+                console.error("Geolocation Error:", error);
+            });
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+    // Optionally, set interval to update the location periodically (every 5 seconds)
+    setInterval(updateLocation, 5000);
+</script>
+
+
+
+<script>
+    {% if messages %}
+        {% for msg in messages %}
+            alert("{{ msg }}");
+        {% endfor %}
+    {% endif %}
+</script>
+
+</body>
+</html>

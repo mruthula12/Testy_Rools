@@ -1,0 +1,298 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasty Roots</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'sta/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'sta/css/tailwind.css' %}">
+    <link rel="stylesheet" href="{% static 'sta/css/tooplate-antique-cafe.css' %}">
+    <style>
+      .hiddenn {
+        display: none;
+      }
+    </style>
+
+</head>
+<body>    
+    <!-- Intro -->
+    <div id="intro" class="parallax-window" data-parallax="scroll" data-image-src="{% static 'sta/img/antique-cafe-bg-01.jpg' %}">
+        <nav id="tm-nav" class="fixed w-full">
+            <div class="tm-container mx-auto px-2 md:py-6 text-right">
+                <button class="md:hidden py-2 px-2" id="menu-toggle"><i class="fas fa-2x fa-bars tm-text-gold"></i></button>
+                <ul class="mb-3 md:mb-0 text-2xl font-normal flex justify-end flex-col md:flex-row">
+                    <li class="inline-block mb-4 mx-4"><a href="#intro" class="tm-text-gold py-1 md:py-3 px-4">Home</a></li>
+                    <li class="inline-block mb-4 mx-4"><a href="#menu" class="tm-text-gold py-1 md:py-3 px-4">Menu</a></li>
+                    <li class="inline-block mb-4 mx-4"><a href="#about" class="tm-text-gold py-1 md:py-3 px-4">About</a></li>
+                    <li class="inline-block mb-4 mx-4"><a href="#contact" class="tm-text-gold py-1 md:py-3 px-4">Contact</a></li>
+                    <button class="inline-block mb-4 mx-4  tm-text-gold" id="registerBtn">Register</button>
+
+                     <!-- Popup Modal -->
+                    <div id="popupModal" class="hiddenn fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex justify-center items-center">
+                      <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                        <h2 class="text-lg font-bold mb-4">Choose an Option</h2>
+                        <p class="mb-6">What would you like to do?</p>
+                        <div class="flex justify-center gap-4">
+                          <button class="px-4 py-2 bg-blue-500 text-blue rounded-lg hover:bg-blue-600" onclick="location.href='{% url 'register_custmer' %}'">Customer registration</button>
+                          <button class="px-4 py-2 bg-blue-500 text-red rounded-lg hover:bg-blue-600" onclick="location.href='{% url 'register_supplier' %}'">Supplier registration</button>
+                          <button class="px-4 py-2 bg-red-500 text-orange rounded-lg hover:bg-red-600" id="closePopup">Cancel</button>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    {% if user.is_authenticated %}
+                   <button class="inline-block mb-4 mx-4  tm-text-gold"  onclick="location.href='{% url 'logout' %}'">Logout</button>
+                    {% else %}
+                    <button class="inline-block mb-4 mx-4  tm-text-gold"  onclick="location.href='{% url 'login' %}'">Login</button>
+                    {% endif %}
+
+
+                </ul>
+            </div>            
+        </nav>
+        <div class="container mx-auto px-2 tm-intro-width">
+            <div class="sm:pb-60 sm:pt-48 py-20">
+                <div class="bg-black bg-opacity-70 p-12 mb-5 text-center">
+
+                    <h1 class="text-white text-5xl tm-logo-font mb-5 " style="font-size:100px">Tasty Roots</h1>
+
+                    <p class="tm-text-gold tm-text-2xl">"Savor every bite"</p>
+                </div>    
+                <div class="bg-black bg-opacity-70 p-10 mb-5">
+                    <p class="text-white leading-8 text-sm font-light">
+                      At Tasty Roots, we take pride in offering a diverse menu that blends the finest traditional and international flavors. Whether you’re in the mood for comforting traditional flavors or exploring international tastes, we bring it all to your doorstep. Our focus is on quality, convenience, and ensuring every meal is prepared with care, so you can enjoy the best of both worlds, delivered quickly and fresh. With our fast and reliable online delivery service, you can enjoy a satisfying meal in the comfort of your home, anytime you like. <a rel="nofollow" href="#tyt" target="_parent">send us a message</a>. </p>
+                </div>
+                <div class="text-center">
+                    <div class="inline-block">
+                        <a href="#menu" class="flex justify-center items-center bg-black bg-opacity-70 py-6 px-8 rounded-lg font-semibold tm-text-2xl tm-text-gold hover:text-gray-200 transition">
+                            <i class="fas fa-coffee mr-3"></i>
+                            <span>Let's explore...</span>                        
+                        </a>
+                    </div>                    
+                </div>                
+            </div>
+        </div>        
+    </div>
+
+
+    <!-- Cafe Menu -->
+<div id="menu" class="parallax-window" data-parallax="scroll" data-image-src="{% static 'sta/img/antique-cafe-bg-02.jpg' %}">
+    <div class="container mx-auto tm-container py-24 sm:py-48">
+        <div class="text-center mb-16">
+            <h2 class="bg-white tm-text-brown py-6 px-12 text-4xl font-medium inline-block rounded-md">Our Menu</h2>
+        </div>
+
+        <!-- Flex container to hold left and right columns -->
+        <div class="flex flex-col lg:flex-row justify-around items-start gap-6">
+
+            <!-- Left Side Column -->
+            <div class="flex-1 m-5 rounded-xl px-4 py-6 sm:px-8 sm:py-10 tm-bg-brown tm-item-container">
+                <div class="product-list">
+                    {% for t in fgt %}
+                    {% if forloop.counter|divisibleby:2 %}
+                    <div class="flex items-start mb-6 tm-menu-item rounded-md border border-gray-400 shadow-lg p-4">
+                        {% if t.photo %}
+                        <img src="{{ t.photo.url }}" alt="Image" class="rounded-md" style="width: 160px; height: 130px;">
+                        {% else %}
+                        <img src="{% static 'sta/img/kfc-burger.jpg' %}" alt="Default Image" class="rounded-md" style="width: 160px; height: 130px;">
+                        {% endif %}
+                        <div class="ml-3 sm:ml-6">
+                            <h3 class="text-lg sm:text-xl mb-2 sm:mb-3 tm-text-yellow">{{t.product_name}}</h3>
+                            <div class="text-white text-md sm:text-lg font-light">&#8377; {{t.product_price}}</div>
+                            <!--
+                            <button class="inline-block tm-bg-green transition text-white text-xl pt-3 pb-3 px-8 rounded-md"
+                                    onclick="window.location.href='#'"
+                                    style="font-size: 20px;">
+                                Add to cart <i class="fa fa-shopping-cart"></i>
+                            </button>
+                            -->
+
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Right Side Column -->
+            <div class="flex-1 m-5 rounded-xl px-4 py-6 sm:px-8 sm:py-10 tm-bg-brown tm-item-container">
+                <div class="product-list">
+                    {% for t in fgt %}
+                    {% if not forloop.counter|divisibleby:2 %}
+                    <div class="flex items-start mb-6 tm-menu-item rounded-md border border-gray-400 shadow-lg p-4">
+                        {% if t.photo %}
+                        <img src="{{ t.photo.url }}" alt="Image" class="rounded-md" style="width: 160px; height: 130px;">
+                        {% else %}
+                        <img src="{% static 'sta/img/kfc-burger.jpg' %}" alt="Default Image" class="rounded-md" style="width: 160px; height: 130px;">
+                        {% endif %}
+                        <div class="ml-3 sm:ml-6">
+                            <h3 class="text-lg sm:text-xl mb-2 sm:mb-3 tm-text-yellow">{{t.product_name}}</h3>
+                            <div class="text-white text-md sm:text-lg font-light">&#8377; {{t.product_price}}</div>
+
+                            <!--
+                            <button class="inline-block tm-bg-green transition text-white text-xl pt-3 pb-3 px-8 rounded-md"
+                                    onclick="window.location.href='#'"
+                                    style="font-size: 20px;">
+                                Add to cart <i class="fa fa-shopping-cart"></i>
+                            </button>
+                            -->
+
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="about" class="parallax-window" data-parallax="scroll" data-image-src="{% static 'sta/img/antique-cafe-bg-03.jpg' %}">
+    <div class="container mx-auto tm-container py-24 sm:py-48">
+        <div class="tm-item-container sm:ml-auto sm:mr-12 mx-auto sm:px-0 px-4">
+            <div class="bg-white bg-opacity-80 p-12 pb-14 rounded-xl mb-5">
+                <h2 class="mb-6 tm-text-green text-4xl font-medium">About </h2>
+                <p class="mb-6 text-base leading-8">
+                 Tasty Roots is a vibrant restaurant dedicated to serving dishes that highlight the natural flavors of fresh, quality ingredients. With a commitment to creating an inviting and relaxed dining experience, Tasty Roots offers a menu filled with thoughtfully prepared meals that cater to a variety of tastes. It’s the perfect spot for anyone looking to enjoy delicious, comforting food in a warm and welcoming setting.
+                </p>
+
+            </div>
+            <a href="#contact" class="inline-block tm-bg-green transition text-white text-xl pt-3 pb-4 px-8 rounded-md">
+                <i class="far fa-comments mr-4"></i>
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+
+<div id="contact" class="parallax-window relative" data-parallax="scroll" data-image-src="{% static 'sta/img/antique-cafe-bg-04.jpg' %}">
+    <div class="container mx-auto tm-container pt-24 pb-48 sm:py-48">
+        <div class="flex flex-col lg:flex-row justify-around items-center lg:items-stretch">
+            <div class="flex-1 rounded-xl px-10 py-12 m-5 bg-white bg-opacity-80 tm-item-container">
+                <h2 class="text-3xl mb-6 tm-text-green">Contact Us</h2>
+                <p class="mb-6 text-lg leading-8">
+                    We are open to hear your suggestions and queries. Please contact us with below details.
+                </p>
+                <p class="mb-10 text-lg">
+                    <span class="block mb-2">Tel: <a href="tel:0100200340" class="hover:text-yellow-600 transition">7025567892</a></span>
+                    <span class="block">Email: <a href="mailto:info@company.com" class="hover:text-yellow-600 transition">tastyroots@gmail.com</a></span>
+                </p>
+                <div class="text-center">
+                    <a href="https://www.google.com/maps" class="inline-block text-white text-2xl pl-10 pr-12 py-6 rounded-lg transition tm-bg-green">
+                        <i class="fas fa-map-marked-alt mr-8"></i>
+                        Open Maps
+                    </a>
+                </div>
+            </div>
+            <div class="flex-1 rounded-xl p-12 pb-14 m-5 bg-black bg-opacity-50 tm-item-container">
+
+                <form action="{% url 'contact_mail' %}" method="POST" class="text-lg" id="tyt">
+                    {% csrf_token %}
+                    <input type="text" name="name" class="input w-full bg-black border-b bg-opacity-0 text-white px-0 py-4 mb-4 tm-border-gold" placeholder="Name" required="" />
+                    <input type="email" name="email" class="input w-full bg-black border-b bg-opacity-0 text-white px-0 py-4 mb-4 tm-border-gold" placeholder="Email" required="" />
+                    <textarea rows="6" name="message" class="input w-full bg-black border-b bg-opacity-0 text-white px-0 py-4 mb-4 tm-border-gold" placeholder="Message..." required=""></textarea>
+                    <div class="text-right">
+                        <button type="submit" form="tyt" class="text-white hover:text-yellow-500 transition">Send it</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <footer class="absolute bottom-0 left-0 w-full">
+            <div class="text-white container mx-auto tm-container p-8 text-lg flex flex-col md:flex-row justify-between">
+
+
+            </div>
+        </footer>
+    </div>
+</div>
+
+
+<script src="{% static 'sta/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'sta/js/parallax.min.js' %}"></script>
+<script src="{% static 'sta/js/jquery.singlePageNav.min.js' %}"></script>
+<script>
+
+    function checkAndShowHideMenu() {
+        if(window.innerWidth < 768) {
+            $('#tm-nav ul').addClass('hidden');
+        } else {
+            $('#tm-nav ul').removeClass('hidden');
+        }
+    }
+
+    $(function(){
+        var tmNav = $('#tm-nav');
+        tmNav.singlePageNav();
+
+        checkAndShowHideMenu();
+        window.addEventListener('resize', checkAndShowHideMenu);
+
+        $('#menu-toggle').click(function(){
+            $('#tm-nav ul').toggleClass('hidden');
+        });
+
+        $('#tm-nav ul li').click(function(){
+            if(window.innerWidth < 768) {
+                $('#tm-nav ul').addClass('hidden');
+            }
+        });
+
+        $(document).scroll(function() {
+            var distanceFromTop = $(document).scrollTop();
+
+            if(distanceFromTop > 100) {
+                tmNav.addClass('scroll');
+            } else {
+                tmNav.removeClass('scroll');
+            }
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    });
+</script>
+
+
+<script>
+  const registerBtn = document.getElementById('registerBtn');
+  const popupModal = document.getElementById('popupModal');
+  const closePopup = document.getElementById('closePopup');
+
+  // Show popup
+  registerBtn.addEventListener('click', () => {
+    popupModal.classList.remove('hiddenn');
+  });
+
+  // Close popup
+  closePopup.addEventListener('click', () => {
+    popupModal.classList.add('hiddenn');
+  });
+</script>
+
+
+<script>
+    {% if messages %}
+        {% for msg in messages %}
+          alert("{{ msg|escapejs }}");
+        {% endfor %}
+    {% endif %}
+</script>
+
+</body>
+</html>

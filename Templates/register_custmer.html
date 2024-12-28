@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer registration</title>
+    <style>
+        body {
+            background-color: rgb(228, 231, 231);
+            background-size: cover;
+            font-family: 'Droid Serif', serif;
+        }
+
+        #container {
+            background: rgba(3, 3, 55, 0.5);
+            width: 28rem;
+            height: 30rem; /* Adjusted for more fields */
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            line-height: 3rem;
+            height: 3rem;
+            background: rgba(3, 3, 55, 0.7);
+            font-size: 1.4rem;
+            color: #d3d3d3;
+        }
+
+        fieldset {
+            border: 0;
+            text-align: center;
+        }
+
+        input[type="submit"], input[type="button"] {
+            background: rgba(235, 30, 54, 1);
+            border: 0;
+            display: block;
+            width: 70%;
+            margin: 0 auto;
+            color: white;
+            padding: 0.7rem;
+            cursor: pointer;
+        }
+
+        input {
+            background: transparent;
+            border: 0;
+            border-left: 4px solid #FF0000;
+            padding: 10px;
+            color: white;
+            width: calc(100% - 20px); /* Ensures alignment */
+            margin-bottom: 1rem;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: 0;
+            background: rgba(235, 30, 54, 0.3);
+            border-radius: 1.2rem;
+            border-color: transparent;
+        }
+
+        ::placeholder {
+            color: #d3d3d3;
+        }
+
+        /* Media queries */
+        @media all and (min-width: 481px) and (max-width: 568px) {
+            #container {
+                margin-top: 10%;
+                margin-bottom: 10%;
+            }
+        }
+
+        @media all and (min-width: 569px) and (max-width: 768px) {
+            #container {
+                margin-top: 5%;
+                margin-bottom: 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <header>Customer registration</header>
+        <form method="post" action="{% url 'register_custmer' %}" onsubmit="showAlert(event)">
+            {% csrf_token %}
+            <fieldset>
+                <br/>
+                <input type="text" name="first_name" id="first_name" placeholder="First name" required autofocus>
+                <input type="text" name="last_name" id="last_name" placeholder="Last name" required>
+                <input type="text" name="username" id="username" placeholder="Username" required>
+                <input type="email" name="email" id="email" placeholder="E-mail" required>
+                <input type="password" name="password" id="password" placeholder="Password" required>
+                <input type="password" name="confirm-password" id="confirm-password" placeholder="Confirm Password" required>
+                <input type="submit" name="submit" id="submit" value="REGISTER">
+                 <input type="button" style="margin-top:10px;" onclick="window.history.back();" name="submit" id="submit" value="BACK">
+            </fieldset>
+        </form>
+    </div>
+
+<script>
+    function showAlert(event) {
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirm-password").value;
+        if (password !== confirmPassword) {
+            alert("Passwords do not match. Please try again.");
+            event.preventDefault();
+        }
+    }
+</script>
+
+
+<script>
+    {% if messages %}
+        {% for msg in messages %}
+          alert("{{ msg }}");
+        {% endfor %}
+    {% endif %}
+</script>
+
+
+
+</body>
+</html>

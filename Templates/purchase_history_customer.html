@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase History</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f7ff; /* Light blue-gray background */
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 50px auto;
+            padding: 25px;
+            background-color: #ffffff; /* White container */
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2em;
+            color: #003b6f; /* Deep navy blue for headings */
+            margin-bottom: 25px;
+        }
+
+        .order-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .order-item {
+            padding: 20px;
+            border: 1px solid #d6e4f0; /* Light blue border */
+            border-radius: 10px;
+            background-color: #e9f3fc; /* Very light blue background */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .order-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .order-item h3,
+        .order-item p {
+            margin: 0 0 10px 0; /* Add spacing between items */
+            font-size: 1em;
+            color: #003b6f; /* Deep navy blue for text */
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .back-link a {
+            display: inline-block;
+            text-decoration: none;
+            font-size: 1em;
+            color: #ffffff; /* White text */
+            background-color: #0077b6; /* Bright blue button */
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .back-link a:hover {
+            background-color: #005f8a; /* Darker blue on hover */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 1.8em;
+            }
+
+            .order-item h3,
+            .order-item p {
+                font-size: 0.95em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Purchase History</h2>
+
+        {% if delivered_orders %}
+            <div class="order-list">
+                {% for order in delivered_orders %}
+                    <div class="order-item">
+                        <h3>{{ order.product.product_name }}</h3>
+                        <p><strong>Quantity:</strong> {{ order.quantity }}</p>
+                        <p><strong>Price:</strong> ₹{{ order.price }}</p>
+                        <p><strong>Order Date:</strong> {{ order.added_date }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="text-align: center; font-size: 1.2em; color: #5a5a5a;">No delivered items yet.</p>
+        {% endif %}
+
+        <div class="back-link">
+            <a href="{% url 'customer_home' %}">Back</a>
+        </div>
+    </div>
+</body>
+</html>

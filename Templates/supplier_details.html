@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier Status Details</title>
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+        }
+        form {
+            margin-top: 20px;
+            text-align: center;
+        }
+        form input[type="text"],
+        form input[type="date"],
+        form button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        form input[type="text"],
+        form input[type="date"] {
+            width: 200px;
+            transition: all 0.3s ease;
+        }
+        form input[type="text"]:focus,
+        form input[type="date"]:focus {
+            border-color: #333;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            outline: none;
+        }
+        form button {
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        form button:hover {
+            background-color: darkred;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: red;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Supplier Status Details</h1>
+        <button type="button" onclick="window.location.href='{% url 'admin_home' %}';" style="width:100px">Back</button>
+
+        <!-- Search Form -->
+        <form method="GET" action="{% url 'supplier_detail' %}" id="search-form">
+            <input type="text" name="srch" placeholder="Search here">
+            <input type="date" name="date">
+            <label for="from_date">From :</label>
+            <input type="date" class="date-format" name="from_date" placeholder="From DD-MM-YY">
+            <label for="to_date">To :</label>
+            <input type="date" class="date-format" name="to_date" placeholder="To DD-MM-YY">
+        </form>
+
+        <table id="supplier-table">
+            <tr>
+                <th>Supplier Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Status (In/Out)</th>
+                <th>Date & Time</th>
+            </tr>
+
+            {% if supplier_statuses %}
+                {% for status in supplier_statuses %}
+                <tr>
+                    <td>{{ status.supplier_reg.user.first_name }}</td>
+                    <td>{{ status.supplier_reg.user.last_name }}</td>
+                    <td>{{ status.supplier_reg.user.email }}</td>
+                    <td class="center">{{ status.in_out }}</td>
+                    <td>{{ status.date_time|date:"Y-m-d H:i:s A" }}</td>
+                    <td>
+                        <button type="button" onclick="window.location.href='{% url 'delete_suppl_stats_adm' status.id %}';" style="width:100px">Delete</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="5" class="center">No supplier status records found.</td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let debounceTimeout;
+
+        $(document).ready(function() {
+            // Trigger search with a delay when input values change
+            $('input[name="srch"], input[name="date"], input[name="from_date"], input[name="to_date"]').on('input change', function() {
+                clearTimeout(debounceTimeout); // Clear any previous timeout
+                debounceTimeout = setTimeout(function() {
+                    triggerSearch(); // Trigger the search after delay
+                }, 500); // 500ms delay (adjustable)
+            });
+        });
+
+        // Function to handle the search
+        function triggerSearch() {
+            var srch = $('input[name="srch"]').val();
+            var date = $('input[name="date"]').val();
+            var from_date = $('input[name="from_date"]').val();
+            var to_date = $('input[name="to_date"]').val();
+
+            $.ajax({
+                url: "{% url 'supplier_detail' %}",
+                method: "GET",
+                data: {
+                    srch: srch,
+                    date: date,
+                    from_date: from_date,
+                    to_date: to_date,
+                },
+                success: function(response) {
+                    // Update the table with the new data
+                    $('#supplier-table').html($(response).find('#supplier-table').html());
+                }
+            });
+        }
+    </script>
+</body>
+</html>

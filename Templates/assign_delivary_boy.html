@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Delivery Boy</title>
+    <style>
+        /* General reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 0 20px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 700px;
+            padding: 40px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease-out;
+        }
+
+        .container:hover {
+            transform: translateY(0);
+        }
+
+        h1 {
+            font-size: 40px;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .order-detail p {
+            font-size: 18px;
+            margin: 8px 0;
+            color: #777;
+        }
+
+        .order-detail strong {
+            color: #009688;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin: 30px 0;
+        }
+
+        label {
+            font-size: 20px;
+            color: #333;
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        select {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+            color: #333;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        select:focus {
+            border-color: #009688;
+            background-color: #ffffff;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #009688;
+            color: white;
+            border: none;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #00796b;
+        }
+
+        .back-link {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .back-link a {
+            text-decoration: none;
+            color: #00796b;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .back-link a:hover {
+            color: #004d40;
+        }
+
+        .order-detail {
+            background-color: #f9f9f9;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .order-detail h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .order-detail p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .order-detail strong {
+            color: #009688;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Assign Delivery Boy</h1>
+        <div class="order-detail">
+            <h3>Order Details</h3>
+            <p><strong>Product:</strong> {{ order.product.product_name }}</p>
+            <p><strong>Quantity:</strong> {{ order.quantity }}</p>
+            <p><strong>Price:</strong> ₹{{ order.price }}</p>
+            <p><strong>Customer Name:</strong> {{ order.chekout_reg.user.first_name }} {{ order.chekout_reg.user.last_name }}</p>
+        </div>
+
+        <!-- Form to select delivery boy from valid suppliers -->
+        <form method="POST" action="{% url 'assign_delivary_boy' order.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="delivery_boy">Select a Delivery Boy:</label>
+                <select name="delivery_boy" id="delivery_boy">
+                    <!-- Default option -->
+                    <option value="" disabled selected>Select Delivery Boy</option>
+                    {% for supplier in suppliers %}
+                        <option value="{{ supplier.supplier_reg.id }}">
+                            {{ supplier.supplier_reg.user.first_name }} {{ supplier.supplier_reg.user.last_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit">Assign Delivery Boy</button>
+        </form>
+
+        <div class="back-link">
+            <a href="{% url 'custmer_order_adm' %}">Back to Orders</a>
+        </div>
+    </div>
+
+</body>
+</html>
